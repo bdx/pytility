@@ -96,13 +96,26 @@ def get_profile_folder():
 	http://blog.mithis.net/archives/python/94-reading-cookies-firefox
 	"""
 
-	# TODO: Actually implement the code!
+	import os
+	import ConfigParser
 
-	profile_folder = '/home/user/.mozilla/firefox/f00b4r.default'
+	firefoxdir=os.path.expanduser('~/.mozilla/firefox')
+	config = ConfigParser.ConfigParser()
+	config.read(firefoxdir + '/profiles.ini')
+
+	for profile in config.sections():
+	    if (profile == 'General'):
+	        continue
+	    if config.has_option(profile, 'default'):
+	        if (config.get(profile, 'default') == '1'):
+	            defaultprofile=profile
+	            break
+
+	profile_folder=config.get(defaultprofile, 'path')
+	if (config.get(defaultprofile, 'isrelative')):
+	    profile_folder=firefoxdir + '/' + profile_folder
 
 	return profile_folder
-
-
 
 # Test the script, see if we are logged into Github
 
